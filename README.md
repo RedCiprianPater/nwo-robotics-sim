@@ -64,6 +64,49 @@ nwo-sim run --env "warehouse" --robot "mobile_manipulator" --task "pick up box"
 nwo-sim train --env "warehouse" --task "navigation" --episodes 1000
 ```
 
+## 💳 Billing & Credits System
+
+### Prepaid Credits Model
+
+NWO Simulation uses a **prepaid credits system** powered by PayPal:
+
+| Service | Rate | Description |
+|---------|------|-------------|
+| **Environment Creation** | $0.10 | One-time fee per virtual environment |
+| **Simulation Runtime** | $0.01/sec | Billed by actual seconds used |
+| **RL Training** | $0.50/episode | Per training episode completed |
+
+### Credit Packages
+
+Purchase credits in bulk with bonus discounts:
+
+| Package | Price | Credits | Bonus | Total |
+|---------|-------|---------|-------|-------|
+| **Starter** | $10 | $10 | - | **$10** |
+| **Pro** | $50 | $50 | $5 | **$55** |
+| **Enterprise** | $200 | $200 | $30 | **$230** |
+
+### Purchase Credits
+
+Visit the credits page to purchase:
+
+```
+https://nwo.capital/webapp/simulation-credits.php
+```
+
+Or use the API directly:
+```bash
+curl -X POST https://nwo.capital/webapp/simulation-paypal-billing.php?action=create-order \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": 123, "package_id": 2}'
+```
+
+### Check Balance
+
+```bash
+curl "https://nwo.capital/webapp/simulation-paypal-billing.php?action=check-balance&user_id=123"
+```
+
 ## 🔗 Cloud Integration
 
 This package works alongside the cloud API for remote simulation:
@@ -71,7 +114,7 @@ This package works alongside the cloud API for remote simulation:
 | Feature | Local (`nwo-sim`) | Cloud API |
 |---------|------------------|-----------|
 | **GPU Required** | Yes (your machine) | No (we provide) |
-| **Cost** | Free | Pay-per-use |
+| **Cost** | Free (credits only) | Credits deducted |
 | **Speed** | Depends on your GPU | High-performance |
 | **Best For** | Development, testing | Production, scale |
 
@@ -119,7 +162,29 @@ nwo-robotics-sim/
 - **PyPI:** https://pypi.org/project/nwo-robotics-sim/
 - **GitHub:** https://github.com/RedCiprianPater/nwo-robotics-sim
 - **Cloud API:** https://nwo-simulation-api.onrender.com
+- **Credits Page:** https://nwo.capital/webapp/simulation-credits.php
+- **Billing API:** https://nwo.capital/webapp/simulation-paypal-billing.php
 - **NWO Robotics:** https://github.com/nwocapital/nwo-robotics
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐     ┌──────────────────────┐     ┌─────────────────┐
+│   User Browser  │────▶│  nwo.capital Hosting │────▶│  Render Cloud   │
+│                 │     │                      │     │                 │
+│ Buy Credits     │     │ - PayPal Billing     │     │ - Simulation    │
+│ Check Balance   │     │ - Credit Management  │     │   API Service   │
+│ View History    │     │ - Database           │     │                 │
+└─────────────────┘     └──────────────────────┘     └─────────────────┘
+                                │
+                                ▼
+                        ┌─────────────────┐
+                        │   MySQL DB      │
+                        │ - User Credits  │
+                        │ - Transactions  │
+                        │ - Usage Logs    │
+                        └─────────────────┘
+```
 
 ## 📝 License
 
@@ -132,3 +197,9 @@ Contributions welcome! Please open an issue or pull request on GitHub.
 ## ⚠️ Note
 
 This is an alpha release. LingBot-World integration is scaffolded but requires manual setup of the world model weights for full functionality.
+
+## 📞 Support
+
+- **Email:** ciprian.pater@publicae.org
+- **Issues:** https://github.com/RedCiprianPater/nwo-robotics-sim/issues
+- **Credits Page:** https://nwo.capital/webapp/simulation-credits.php
